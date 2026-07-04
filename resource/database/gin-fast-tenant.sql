@@ -1400,3 +1400,136 @@ CREATE TABLE `sys_area` (
   UNIQUE KEY `uk_sys_area_value` (`value`),
   KEY `idx_sys_area_parent` (`parent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='行政区划';
+
+-- COMMENT-BLOCK-START
+-- 以下语句用于补齐表级和字段级中文注释
+ALTER TABLE `demo_students` COMMENT='学员管理';
+ALTER TABLE `demo_students` MODIFY COLUMN `student_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '学员ID';
+
+ALTER TABLE `demo_teacher` COMMENT='教师表';
+
+ALTER TABLE `example` COMMENT='示例表';
+ALTER TABLE `example` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `example` MODIFY COLUMN `created_at` datetime NOT NULL COMMENT '创建时间';
+ALTER TABLE `example` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `example` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `example` MODIFY COLUMN `created_by` int(11) DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_affix` COMMENT='附件表';
+ALTER TABLE `sys_affix` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_affix` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_affix` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_affix` MODIFY COLUMN `created_by` int(11) DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_affix_chunk` COMMENT='附件分片上传记录表';
+ALTER TABLE `sys_affix_chunk` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_affix_chunk` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_affix_chunk` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+
+ALTER TABLE `sys_api` COMMENT='API权限表';
+ALTER TABLE `sys_api` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_api` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_api` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_api` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_api` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_casbin_rule` COMMENT='Casbin权限规则表';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `ptype` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略类型';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v0` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段0';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v1` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段1';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v2` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段2';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v3` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段3';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v4` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段4';
+ALTER TABLE `sys_casbin_rule` MODIFY COLUMN `v5` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '策略字段5';
+
+ALTER TABLE `sys_department` COMMENT='部门表';
+ALTER TABLE `sys_department` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_department` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_department` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_department` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_department` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_dict` COMMENT='数据字典表';
+ALTER TABLE `sys_dict` MODIFY COLUMN `description` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述';
+ALTER TABLE `sys_dict` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_dict` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_dict` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_dict` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_dict_item` COMMENT='数据字典项表';
+ALTER TABLE `sys_dict_item` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_dict_item` MODIFY COLUMN `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '字典项名称';
+ALTER TABLE `sys_dict_item` MODIFY COLUMN `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '字典项值';
+ALTER TABLE `sys_dict_item` MODIFY COLUMN `dict_id` int(11) unsigned DEFAULT NULL COMMENT '字典ID';
+
+ALTER TABLE `sys_gen` COMMENT='代码生成配置表';
+ALTER TABLE `sys_gen` MODIFY COLUMN `is_tree` tinyint(3) DEFAULT '0' COMMENT '是否树形结构';
+
+ALTER TABLE `sys_gen_field` COMMENT='代码生成字段配置表';
+ALTER TABLE `sys_gen_field` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_gen_field` MODIFY COLUMN `gen_id` int(11) unsigned DEFAULT NULL COMMENT '生成配置ID';
+
+ALTER TABLE `sys_jobs` COMMENT='任务调度表';
+ALTER TABLE `sys_jobs` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_jobs` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_job_results` COMMENT='任务执行结果表';
+
+ALTER TABLE `sys_menu` COMMENT='系统菜单路由表';
+ALTER TABLE `sys_menu` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_menu` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_menu_api` COMMENT='菜单与API关联表';
+ALTER TABLE `sys_menu_api` MODIFY COLUMN `menu_id` int(11) unsigned NOT NULL COMMENT '菜单ID';
+ALTER TABLE `sys_menu_api` MODIFY COLUMN `api_id` int(11) unsigned NOT NULL COMMENT 'API ID';
+
+ALTER TABLE `sys_operation_logs` COMMENT='系统操作日志表';
+ALTER TABLE `sys_operation_logs` MODIFY COLUMN `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_operation_logs` MODIFY COLUMN `created_at` datetime(3) DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_operation_logs` MODIFY COLUMN `updated_at` datetime(3) DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_operation_logs` MODIFY COLUMN `deleted_at` datetime(3) DEFAULT NULL COMMENT '删除时间';
+
+ALTER TABLE `sys_role` COMMENT='角色表';
+ALTER TABLE `sys_role` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_role` MODIFY COLUMN `parent_id` int(11) unsigned DEFAULT '0' COMMENT '父角色ID';
+ALTER TABLE `sys_role` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_role` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_role` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_role` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT NULL COMMENT '创建人';
+
+ALTER TABLE `sys_role_menu` COMMENT='角色与菜单关联表';
+ALTER TABLE `sys_role_menu` MODIFY COLUMN `role_id` int(11) unsigned NOT NULL COMMENT '角色ID';
+ALTER TABLE `sys_role_menu` MODIFY COLUMN `menu_id` int(11) unsigned NOT NULL COMMENT '菜单ID';
+
+ALTER TABLE `sys_tenants` COMMENT='租户表';
+ALTER TABLE `sys_tenants` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_tenants` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_tenants` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_tenants` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+
+ALTER TABLE `sys_users` COMMENT='用户表';
+ALTER TABLE `sys_users` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_users` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_users` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_users` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+
+ALTER TABLE `sys_user_role` COMMENT='用户与角色关联表';
+
+ALTER TABLE `sys_user_tenant` COMMENT='用户及租户关联表';
+ALTER TABLE `sys_user_tenant` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+
+ALTER TABLE `sys_param` COMMENT='系统参数配置';
+ALTER TABLE `sys_param` MODIFY COLUMN `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_param` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_param` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_param` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+ALTER TABLE `sys_param` MODIFY COLUMN `created_by` int(11) unsigned DEFAULT '0' COMMENT '创建人';
+
+ALTER TABLE `sys_area` COMMENT='行政区划';
+ALTER TABLE `sys_area` MODIFY COLUMN `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID';
+ALTER TABLE `sys_area` MODIFY COLUMN `created_at` datetime DEFAULT NULL COMMENT '创建时间';
+ALTER TABLE `sys_area` MODIFY COLUMN `updated_at` datetime DEFAULT NULL COMMENT '更新时间';
+ALTER TABLE `sys_area` MODIFY COLUMN `deleted_at` datetime DEFAULT NULL COMMENT '删除时间';
+-- COMMENT-BLOCK-END
+

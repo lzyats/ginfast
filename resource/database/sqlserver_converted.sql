@@ -1321,3 +1321,373 @@ CREATE UNIQUE INDEX [sys_area_uk_value] ON [sys_area] ([value]);
 CREATE INDEX [sys_area_idx_parent] ON [sys_area] ([parent]);
 
 SET NOCOUNT OFF;
+
+-- COMMENT-BLOCK-START
+-- 以下语句用于补齐表级和字段级中文注释
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'学员管理', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'学员ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'student_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'姓名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'student_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'年龄', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'age';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'性别', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'gender';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'班级名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'class_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'入学日期', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'admission_date';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N' 邮箱', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'email';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'电话号码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'phone';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'地址', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'address';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_students', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'教师表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'主键ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'教师姓名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'工号', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'employee_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'性别：0-未知 1-男 2-女', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'gender';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'手机号', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'phone';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'邮箱', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'email';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'所教学科', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'subject';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'职称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'title';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态：0-离职 1-在职', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'入职日期', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'hire_date';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'出生日期', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'birth_date';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'demo_teacher', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'示例表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'example', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'附件表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件url', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'url';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件MD5(秒传检测)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'file_md5';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件大小', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'size';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'ftype';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件后缀', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'suffix';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'tenant_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'缩略图路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'thumbnail_path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'缩略图名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'thumbnail_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'缩略图URL', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix', @level2type=N'COLUMN',@level2name=N'thumbnail_url';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'附件分片上传记录表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'上传会话ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'upload_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件MD5', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'file_md5';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'原始文件名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'file_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件总大小', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'file_size';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'分片大小', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'chunk_size';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'总分片数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'total_chunks';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'当前分片序号', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'chunk_index';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'分片文件路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'chunk_path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'0-上传中 1-已合并 2-已取消', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建者ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_affix_chunk', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'API权限表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'权限名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'title';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'权限路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'请求方法', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'method';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'分组', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'api_group';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_api', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Casbin权限规则表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'ptype';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段0', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v0';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段1', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v1';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段2', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v2';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段3', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v3';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段4', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v4';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'策略字段5', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_casbin_rule', @level2type=N'COLUMN',@level2name=N'v5';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'部门表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'父级', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'parent_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'部门名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态： 0 停用 1 启用', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'负责人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'leader';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'联系电话', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'phone';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'邮箱', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'email';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'sort';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'describe';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_department', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据字典表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字典名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字典编码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'code';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据字典项表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字典项名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字典项值', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item', @level2type=N'COLUMN',@level2name=N'value';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字典ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_dict_item', @level2type=N'COLUMN',@level2name=N'dict_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'代码生成配置表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据库类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'db_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据库', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'database';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据库表名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'模块名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'module_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'file_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'describe';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'修改时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否覆盖', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'is_cover';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否生成菜单', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'is_menu';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否树形结构', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'is_tree';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否关联树形分类', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'is_relation_tree';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'关联的树形表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'relation_tree_table';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'关联的字段ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen', @level2type=N'COLUMN',@level2name=N'relation_field';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'代码生成字段配置表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'生成配置ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'gen_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列注释', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_comment';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'额外信息', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_extra';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列键信息', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_column_key';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否为无符号类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'data_unsigned';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否主键', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'is_primary';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'go类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'go_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'前端类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'front_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'自定义字段名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'custom_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否必填', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'require';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表显示', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'list_show';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单显示', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'form_show';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'查询显示', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'query_show';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'查询方式\r\nEQ  等于\r\nNE 不等于\r\nGT 大于\r\nGTE 大于等于\r\nLT 小于\r\nLTE 小于等于\r\nLIKE 包含\r\nBETWEEN 范围', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'query_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单类型\r\ninput 文本框\r\ntextarea 文本域\r\nnumber 数字输入框\r\nselect 下拉框\r\nradio 单选框\r\ncheckbox 复选框\r\ndatetime 日期时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'form_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'关联的字典', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'dict_type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'gorm标签', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_gen_field', @level2type=N'COLUMN',@level2name=N'gorm_tag';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务调度表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务分组名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'group';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行器名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'executor_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行策略: 0=单次执行, 1=重复执行', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'execution_policy';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务状态: 0=禁用, 1=启用', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Cron表达式', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'cron_expression';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务参数(JSON格式)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'parameters';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'阻塞策略: 0=丢弃, 1=覆盖, 2=并行', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'blocking_policy';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'超时时间(纳秒)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'timeout';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'最大重试次数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'max_retry';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'重试间隔(纳秒)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'retry_interval';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'并行数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'parallel_num';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'当前运行中的任务数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'running_count';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_jobs', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务执行结果表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'自增主键', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'job_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行状态: SUCCESS, FAILED, PANIC', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'错误信息', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'error';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'开始时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'start_time';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'结束时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'end_time';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行时长(纳秒)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'duration';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'重试次数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'retry_count';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'记录创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_job_results', @level2type=N'COLUMN',@level2name=N'created_at';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'系统菜单路由表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'路由ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'父级路由ID，顶层为0', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'parent_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'路由路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'路由名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'重定向', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'redirect';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'组件文件路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'component';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'菜单标题，国际化key', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'title';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否全屏显示：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'is_full';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否隐藏：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'hide';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否停用：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'disable';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否缓存：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'keep_alive';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否固定：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'affix';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'外链地址', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'link';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否内嵌：0-否，1-是', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'iframe';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'svg图标名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'svg_icon';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'普通图标名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'icon';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'sort';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'类型：1-目录，2-菜单，3-按钮', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'type';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否外链', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'is_link';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'权限标识', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'permission';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'菜单与API关联表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu_api';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'菜单ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu_api', @level2type=N'COLUMN',@level2name=N'menu_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'API ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_menu_api', @level2type=N'COLUMN',@level2name=N'api_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'系统操作日志表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作用户ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'user_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作用户名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'username';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作模块', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'module';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作类型', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'operation';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'请求方法', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'method';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'请求路径', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'path';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'客户端IP', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'ip';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户代理', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'user_agent';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'请求参数', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'request_data';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'响应数据', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'response_data';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'响应状态码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'status_code';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作耗时(毫秒)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'duration';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'错误信息', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'error_msg';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'操作地点', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'location';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_operation_logs', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'角色表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'角色名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'sort';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'父角色ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'parent_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据权限', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'data_scope';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据权限关联的部门', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'checked_depts';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'角色与菜单关联表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role_menu';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'角色ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role_menu', @level2type=N'COLUMN',@level2name=N'role_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'菜单ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_role_menu', @level2type=N'COLUMN',@level2name=N'menu_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户编码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'code';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态 0停用 1启用', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户域名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'domain';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'主域名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'platform_domain';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'菜单权限', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_tenants', @level2type=N'COLUMN',@level2name=N'menu_permission';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户名', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'username';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'密码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'password';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'邮箱', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'email';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否启用 0停用 1启用', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'部门ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'dept_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'电话', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'phone';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'性别', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'sex';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'昵称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'nick_name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'头像', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'avatar';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'created_by';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户ID字段', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_users', @level2type=N'COLUMN',@level2name=N'tenant_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户与角色关联表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_role';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_role', @level2type=N'COLUMN',@level2name=N'user_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'角色ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_role', @level2type=N'COLUMN',@level2name=N'role_id';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户及租户关联表', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_tenant';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_tenant', @level2type=N'COLUMN',@level2name=N'user_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'租户id', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_tenant', @level2type=N'COLUMN',@level2name=N'tenant_id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否默认租户', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_tenant', @level2type=N'COLUMN',@level2name=N'is_default';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_user_tenant', @level2type=N'COLUMN',@level2name=N'created_at';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'系统参数配置', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'参数名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'name';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'参数唯一标识', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'code';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'参数值', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'value';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'状态(0禁用/1启用)', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'status';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'description';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'deleted_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建人', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_param', @level2type=N'COLUMN',@level2name=N'created_by';
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'行政区划', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ID', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'id';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'地区编码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'value';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'地区名称', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'label';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'层级 1省2市3区县4街道', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'level';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'父级编码', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'parent';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'sort';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'created_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'更新时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'updated_at';
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'删除时间', @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sys_area', @level2type=N'COLUMN',@level2name=N'deleted_at';
+GO
+-- COMMENT-BLOCK-END
+
