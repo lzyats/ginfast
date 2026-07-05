@@ -2,6 +2,8 @@ import { http } from "@/utils/http";
 import { baseUrlApi } from "./utils";
 import { BaseResult } from "./types";
 
+export type ParamType = "text" | "number" | "select" | "upload";
+
 export interface SystemParam {
   id: number;
   createdAt: string;
@@ -10,6 +12,8 @@ export interface SystemParam {
   name: string;
   code: string;
   value: string;
+  paramType: ParamType;
+  options: string;
   status: number;
   description: string;
   createdBy: number | null;
@@ -28,6 +32,7 @@ export interface ParamListParams {
   order?: string;
   name?: string;
   code?: string;
+  paramType?: ParamType;
   status?: number;
 }
 
@@ -35,6 +40,8 @@ export interface ParamAddParams {
   name: string;
   code: string;
   value: string;
+  paramType: ParamType;
+  options?: string;
   status: number;
   description?: string;
 }
@@ -44,6 +51,8 @@ export interface ParamUpdateParams {
   name: string;
   code: string;
   value: string;
+  paramType: ParamType;
+  options?: string;
   status: number;
   description?: string;
 }

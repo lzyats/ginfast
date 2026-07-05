@@ -39,6 +39,22 @@ func (c *SysNoticeController) List(ctx *gin.Context) {
 	c.Success(ctx, gin.H{"list": list, "total": total})
 }
 
+func (c *SysNoticeController) ListUsers(ctx *gin.Context) {
+	var req models.SysNoticeUserListRequest
+	if err := req.Validate(ctx); err != nil {
+		c.FailAndAbort(ctx, err.Error(), err)
+		return
+	}
+
+	list, total, err := c.service.ListUsers(ctx, &req)
+	if err != nil {
+		c.FailAndAbort(ctx, "获取通知用户列表失败", err)
+		return
+	}
+
+	c.Success(ctx, gin.H{"list": list, "total": total})
+}
+
 func (c *SysNoticeController) Send(ctx *gin.Context) {
 	var req models.SysNoticeSendRequest
 	if err := req.Validate(ctx); err != nil {

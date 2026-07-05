@@ -7,6 +7,7 @@ import (
 	"gin-fast/app/global/consts"
 	"gin-fast/app/models"
 	"gin-fast/app/utils/filehelper"
+	"gin-fast/app/utils/uploadhelper"
 	"io"
 	"os"
 	"path/filepath"
@@ -148,7 +149,7 @@ func (s *SysAffixService) MergeChunks(ctx context.Context, req *models.ChunkMerg
 	if ext == "" {
 		ext = ".bin"
 	}
-	newFileName := fmt.Sprintf("%s_%s%s", time.Now().Format("20060102"), uuid.New().String(), ext)
+	newFileName := uploadhelper.GenerateStorageFileName(req.FileName)
 	dateFolder := time.Now().Format("2006-01-02")
 	destDir := filepath.Join(localPath, dateFolder)
 	if err := os.MkdirAll(destDir, 0755); err != nil {
@@ -186,7 +187,15 @@ func (s *SysAffixService) MergeChunks(ctx context.Context, req *models.ChunkMerg
 	}
 
 	storageKey := filepath.ToSlash(filepath.Join(dateFolder, newFileName))
-	uploadResp := &app.UploadResponse{Path: finalPath, Url: app.UploadService.GetFileUrl(storageKey), FileName: newFileName, Size: totalSize, FileType: ext}
+	uploadResp := &app.UploadResponse{
+		Path:         finalPath,
+		Url:          app.UploadService.GetFileUrl(storageKey),
+		FileName:     req.FileName,
+		OriginalName: req.FileName,
+		StoredName:   newFileName,
+		Size:         totalSize,
+		FileType:     ext,
+	}
 	if uploadConfig.UploadType != consts.UploadTypeLocal {
 		uploadResp, err = app.UploadService.UploadLocalFile(finalPath, storageKey)
 		if err != nil {

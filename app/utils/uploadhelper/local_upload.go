@@ -29,7 +29,15 @@ func (s *LocalUploadService) UploadFile(file *multipart.FileHeader) (*app.Upload
 	if err := s.SaveFile(file, filePath); err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(objectKey), Path: filePath, FileName: fileName, Size: file.Size, FileType: s.GetFileExtension(file.Filename)}, nil
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(objectKey),
+		Path:         filePath,
+		FileName:     file.Filename,
+		OriginalName: file.Filename,
+		StoredName:   fileName,
+		Size:         file.Size,
+		FileType:     s.GetFileExtension(file.Filename),
+	}, nil
 }
 
 func (s *LocalUploadService) UploadFileWithCustomPath(file *multipart.FileHeader, customPath string) (string, error) {
@@ -52,7 +60,16 @@ func (s *LocalUploadService) UploadLocalFile(localFilePath string, objectKey str
 	if err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(objectKey), Path: destPath, FileName: filepath.Base(destPath), Size: size, FileType: s.GetFileExtension(destPath)}, nil
+	storedName := filepath.Base(destPath)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(objectKey),
+		Path:         destPath,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         size,
+		FileType:     s.GetFileExtension(destPath),
+	}, nil
 }
 
 func (s *LocalUploadService) DeleteFile(fileRef string) error {
@@ -145,5 +162,13 @@ func (s *LocalUploadService) DownloadAndSaveRemoteImage(imageURL string) (*app.U
 		return nil, fmt.Errorf("保存图片失败: %v", err)
 	}
 
-	return &app.UploadResponse{Url: s.GetFileUrl(objectKey), FileName: fileName, Size: size, FileType: ext, Path: filePath}, nil
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(objectKey),
+		FileName:     fileName,
+		OriginalName: fileName,
+		StoredName:   fileName,
+		Size:         size,
+		FileType:     ext,
+		Path:         filePath,
+	}, nil
 }

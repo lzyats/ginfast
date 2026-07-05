@@ -64,9 +64,11 @@ type S3Config struct {
 }
 
 type UploadResponse struct {
-	Url      string `json:"url"`
-	FileName string `json:"file_name"`
-	Size     int64  `json:"size"`
-	FileType string `json:"file_type"`
-	Path     string `json:"path"`
+	Url          string `json:"url"`
+	FileName     string `json:"file_name"`
+	OriginalName string `json:"original_name"`
+	StoredName   string `json:"stored_name"`
+	Size         int64  `json:"size"`
+	FileType     string `json:"file_type"`
+	Path         string `json:"path"`
 }

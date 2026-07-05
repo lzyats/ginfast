@@ -32,7 +32,7 @@
                     <span>大文件上传</span>
                 </a-button>
             </a-space>
-            <a-table row-key="id" :data="affixList" :bordered="{ cell: true }" :loading="loading"
+            <a-table class="affix-table" row-key="id" :data="affixList" :bordered="{ cell: true }" :loading="loading"
                 :scroll="{ x: '100%', y: '75%' }" :pagination="pagination" @page-change="handlePageChange"
                 @page-size-change="handlePageSizeChange">
                 <template #columns>
@@ -66,7 +66,11 @@
                     </a-table-column>
                     <a-table-column title="操作" :width="320" align="center" :fixed="isMobile ? '' : 'right'">
                         <template #cell="{ record }">
-                            <a-space>
+                            <a-space class="action-space" :wrap="false">
+                                <a-link v-if="canPreview(record)" @click="onPreview(record)">
+                                    <template #icon><icon-eye /></template>
+                                    预览
+                                </a-link>
                                 <a-link @click="onDownload(record)" v-hasPerm="['system:affix:download']">
                                     <template #icon><icon-download /></template>
                                     下载
@@ -112,6 +116,22 @@
                 :auto-start="true"
                 @success="onChunkUploadSuccess"
             />
+        </a-modal>
+        <a-modal
+            v-model:visible="previewVisible"
+            :title="previewTitle"
+            :footer="false"
+            :width="isMobile ? '95%' : '70%'"
+            @close="closePreview"
+        >
+            <div class="preview-wrapper">
+                <a-spin v-if="previewLoading" tip="正在加载预览..." />
+                <template v-else-if="previewUrl">
+                    <img v-if="previewType === 'image'" :src="previewUrl" class="preview-image" alt="文件预览" />
+                    <video v-else-if="previewType === 'video'" :src="previewUrl" class="preview-video" controls playsinline />
+                </template>
+                <a-empty v-else description="暂无可预览内容" />
+            </div>
         </a-modal>
     </div>
 </template>
@@ -164,6 +184,12 @@ const layoutMode = computed(() => {
   };
   return isMobile.value ? info.mobile : info.desktop;
 });
+
+const previewVisible = ref(false);
+const previewLoading = ref(false);
+const previewUrl = ref("");
+const previewType = ref<"image" | "video" | "">("");
+const previewTitle = ref("文件预览");
 
 // 搜索表单
 const form = ref({
@@ -281,6 +307,35 @@ const onDownload = async (row: any) => {
 };
 
 // 上传文件
+const canPreview = (record: any) => ["image", "video"].includes(record?.ftype);
+
+const onPreview = async (record: any) => {
+    previewVisible.value = true;
+    previewLoading.value = true;
+    previewUrl.value = "";
+    previewType.value = record.ftype === "video" ? "video" : "image";
+    previewTitle.value = `${record.name || "文件"}预览`;
+
+    try {
+        previewUrl.value = await getFileUrl(record);
+        if (!previewUrl.value) {
+            Message.warning("未获取到可预览地址");
+        }
+    } catch (error) {
+        Message.error("加载预览失败");
+    } finally {
+        previewLoading.value = false;
+    }
+};
+
+const closePreview = () => {
+    previewVisible.value = false;
+    previewLoading.value = false;
+    previewUrl.value = "";
+    previewType.value = "";
+    previewTitle.value = "文件预览";
+};
+
 const uploadLoading = ref(false);
 const handleUpload = async (options: any) => {
     const { fileItem, onError, onSuccess } = options;
@@ -413,5 +468,38 @@ onMounted(() => {
 
 :deep(.arco-table-container) {
     border-radius: $radius-box-1;
+}
+
+.action-space {
+    white-space: nowrap;
+}
+
+.affix-table:deep(th:last-child),
+.affix-table:deep(td:last-child) {
+    min-width: 440px;
+}
+
+.preview-wrapper {
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-fill-1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.preview-image {
+    display: block;
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.preview-video {
+    display: block;
+    width: 100%;
+    max-height: 70vh;
+    background: #000;
 }
 </style>

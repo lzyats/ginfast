@@ -61,6 +61,15 @@ type SysMyNoticeItem struct {
 	SenderName string     `json:"senderName"`
 }
 
+type SysNoticeSelectableUserItem struct {
+	ID             uint   `json:"id"`
+	UserName       string `json:"userName"`
+	NickName       string `json:"nickName"`
+	Phone          string `json:"phone"`
+	Status         int8   `json:"status"`
+	DepartmentName string `json:"departmentName"`
+}
+
 func IsValidSysNoticeCategory(category string) bool {
 	switch category {
 	case SysNoticeCategoryNotice, SysNoticeCategoryMessage, SysNoticeCategoryBacklog:

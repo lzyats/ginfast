@@ -71,7 +71,16 @@ func (s *QiniuUploadService) UploadLocalFile(localFilePath string, objectKey str
 	if err := s.putObject(src, info.Size(), key); err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: info.Size(), FileType: s.GetFileExtension(key)}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         info.Size(),
+		FileType:     s.GetFileExtension(key),
+	}, nil
 }
 
 func (s *QiniuUploadService) DeleteFile(fileRef string) error {
@@ -117,7 +126,15 @@ func (s *QiniuUploadService) uploadMultipart(file *multipart.FileHeader, key str
 	if err := s.putObject(src, file.Size, key); err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: file.Size, FileType: s.GetFileExtension(file.Filename)}, nil
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     file.Filename,
+		OriginalName: file.Filename,
+		StoredName:   filepath.Base(key),
+		Size:         file.Size,
+		FileType:     s.GetFileExtension(file.Filename),
+	}, nil
 }
 
 func (s *QiniuUploadService) putObject(reader io.Reader, size int64, key string) error {
@@ -169,5 +186,14 @@ func (s *QiniuUploadService) DownloadAndSaveRemoteImage(imageURL string) (*app.U
 	if err := s.putObject(resp.Body, resp.ContentLength, key); err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: resp.ContentLength, FileType: ext}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         resp.ContentLength,
+		FileType:     ext,
+	}, nil
 }

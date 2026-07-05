@@ -72,7 +72,16 @@ func (s *OSSUploadService) UploadLocalFile(localFilePath string, objectKey strin
 	if err := s.bucket.PutObject(key, src); err != nil {
 		return nil, fmt.Errorf("上传文件失败: %v", err)
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: info.Size(), FileType: s.GetFileExtension(key)}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         info.Size(),
+		FileType:     s.GetFileExtension(key),
+	}, nil
 }
 
 func (s *OSSUploadService) DeleteFile(fileRef string) error {
@@ -128,7 +137,15 @@ func (s *OSSUploadService) uploadMultipart(file *multipart.FileHeader, key strin
 	if err := s.bucket.PutObject(key, src); err != nil {
 		return nil, fmt.Errorf("上传文件失败: %v", err)
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: file.Size, FileType: s.GetFileExtension(file.Filename)}, nil
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     file.Filename,
+		OriginalName: file.Filename,
+		StoredName:   filepath.Base(key),
+		Size:         file.Size,
+		FileType:     s.GetFileExtension(file.Filename),
+	}, nil
 }
 
 func (s *OSSUploadService) getFileKey(fileRef string) string {
@@ -151,5 +168,14 @@ func (s *OSSUploadService) DownloadAndSaveRemoteImage(imageURL string) (*app.Upl
 	if err := s.bucket.PutObject(key, resp.Body); err != nil {
 		return nil, fmt.Errorf("上传图片失败: %v", err)
 	}
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: resp.ContentLength, FileType: ext}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         resp.ContentLength,
+		FileType:     ext,
+	}, nil
 }

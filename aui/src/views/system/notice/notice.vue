@@ -61,6 +61,7 @@
             </a-space>
 
             <div class="receiver-summary">
+              查询结果 {{ userQuery.total }} 人，
               已选用户 {{ selectedUserIds.length }} 人
             </div>
 
@@ -70,26 +71,25 @@
               :loading="userLoading"
               :pagination="userPagination"
               :row-selection="rowSelection"
+              :scroll="{ x: 920, y: 320 }"
               v-model:selected-keys="selectedUserIds"
               @page-change="handleUserPageChange"
               @page-size-change="handleUserPageSizeChange"
             >
-              <a-table-column title="ID" data-index="id" :width="80" />
-              <a-table-column title="用户名" data-index="userName" :width="180" ellipsis tooltip />
-              <a-table-column title="昵称" data-index="nickName" :width="160" ellipsis tooltip />
-              <a-table-column title="手机号" data-index="phone" :width="160" />
-              <a-table-column title="状态" :width="100">
-                <template #cell="{ record }">
-                  <a-tag :color="record.status === 1 ? 'green' : 'red'">
-                    {{ record.status === 1 ? "启用" : "禁用" }}
-                  </a-tag>
-                </template>
-              </a-table-column>
-              <a-table-column title="部门" :width="180" ellipsis tooltip>
-                <template #cell="{ record }">
-                  {{ record.department?.name || "-" }}
-                </template>
-              </a-table-column>
+              <template #columns>
+                <a-table-column title="ID" data-index="id" :width="80" />
+                <a-table-column title="用户名" data-index="userName" :width="180" ellipsis tooltip />
+                <a-table-column title="昵称" data-index="nickName" :width="160" ellipsis tooltip />
+                <a-table-column title="手机号" data-index="phone" :width="160" />
+                <a-table-column title="状态" :width="100">
+                  <template #cell="{ record }">
+                    <a-tag :color="record.status === 1 ? 'green' : 'red'">
+                      {{ record.status === 1 ? "启用" : "禁用" }}
+                    </a-tag>
+                  </template>
+                </a-table-column>
+                <a-table-column title="部门" data-index="departmentName" :width="180" ellipsis tooltip />
+              </template>
             </a-table>
           </a-card>
         </div>
@@ -118,21 +118,23 @@
       </div>
 
       <a-table :data="tableData" :loading="loading" :pagination="pagination" row-key="id" @page-change="handlePageChange">
-        <a-table-column title="ID" data-index="id" :width="80" />
-        <a-table-column title="类型" data-index="category" :width="110">
-          <template #cell="{ record }">
-            <a-tag :color="tagColorMap[record.category]">{{ categoryLabelMap[record.category] || record.category }}</a-tag>
-          </template>
-        </a-table-column>
-        <a-table-column title="标题" data-index="title" :width="220" ellipsis tooltip />
-        <a-table-column title="内容" data-index="content" ellipsis tooltip />
-        <a-table-column title="接收人数" data-index="recipientCount" :width="110" />
-        <a-table-column title="发送人" data-index="createdByName" :width="140" ellipsis tooltip />
-        <a-table-column title="发送时间" data-index="sentAt" :width="180">
-          <template #cell="{ record }">
-            {{ formatTime(record.sentAt || record.createdAt) }}
-          </template>
-        </a-table-column>
+        <template #columns>
+          <a-table-column title="ID" data-index="id" :width="80" />
+          <a-table-column title="类型" data-index="category" :width="110">
+            <template #cell="{ record }">
+              <a-tag :color="tagColorMap[record.category]">{{ categoryLabelMap[record.category] || record.category }}</a-tag>
+            </template>
+          </a-table-column>
+          <a-table-column title="标题" data-index="title" :width="220" ellipsis tooltip />
+          <a-table-column title="内容" data-index="content" ellipsis tooltip />
+          <a-table-column title="接收人数" data-index="recipientCount" :width="110" />
+          <a-table-column title="发送人" data-index="createdByName" :width="140" ellipsis tooltip />
+          <a-table-column title="发送时间" data-index="sentAt" :width="180">
+            <template #cell="{ record }">
+              {{ formatTime(record.sentAt || record.createdAt) }}
+            </template>
+          </a-table-column>
+        </template>
       </a-table>
     </a-card>
   </div>
@@ -140,8 +142,7 @@
 
 <script setup lang="ts">
 import { arcoMessage, formatTime } from "@/globals";
-import { getSysNoticeListAPI, sendSysNoticeAPI } from "@/api/sysnotice";
-import { getAccountListAPI, type AccountItem } from "@/api/user";
+import { getSysNoticeListAPI, getSysNoticeUsersAPI, sendSysNoticeAPI, type NoticeSelectableUserItem } from "@/api/sysnotice";
 import { useNoticeStoreHook } from "@/store/modules/notice";
 
 const noticeStore = useNoticeStoreHook();
@@ -149,7 +150,7 @@ const loading = ref(false);
 const sending = ref(false);
 const userLoading = ref(false);
 const tableData = ref<any[]>([]);
-const userTableData = ref<AccountItem[]>([]);
+const userTableData = ref<NoticeSelectableUserItem[]>([]);
 const selectedUserIds = ref<number[]>([]);
 
 const rowSelection = reactive({
@@ -169,7 +170,7 @@ const query = reactive({
 const userQuery = reactive({
   name: "",
   phone: "",
-  status: undefined as number | undefined,
+  status: null as number | null,
   pageNum: 1,
   pageSize: 10,
   total: 0
@@ -231,7 +232,7 @@ const getList = async () => {
 const getUsers = async () => {
   userLoading.value = true;
   try {
-    const res = await getAccountListAPI({
+    const res = await getSysNoticeUsersAPI({
       name: userQuery.name,
       phone: userQuery.phone,
       status: userQuery.status,
@@ -239,7 +240,7 @@ const getUsers = async () => {
       pageSize: userQuery.pageSize,
       order: "id desc"
     });
-    userTableData.value = res?.data?.list || [];
+    userTableData.value = Array.isArray(res?.data?.list) ? res.data.list : [];
     userQuery.total = Number(res?.data?.total || 0);
   } catch {
     arcoMessage("error", "获取用户列表失败");
@@ -299,7 +300,7 @@ const resetQuery = () => {
 const resetUserQuery = (shouldLoad = true) => {
   userQuery.name = "";
   userQuery.phone = "";
-  userQuery.status = undefined;
+  userQuery.status = null;
   userQuery.pageNum = 1;
   userQuery.pageSize = 10;
   if (shouldLoad) {
@@ -339,6 +340,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .notice-page {
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
   padding: $padding;
 }
 
@@ -359,5 +363,9 @@ onMounted(() => {
 .receiver-summary {
   margin-bottom: 12px;
   color: var(--color-text-2);
+}
+
+:deep(.receiver-panel .arco-card-body) {
+  overflow: hidden;
 }
 </style>

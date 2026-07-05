@@ -17,7 +17,11 @@ import (
 
 func generateFileName(originalFileName string) string {
 	ext := strings.ToLower(filepath.Ext(originalFileName))
-	return fmt.Sprintf("%s_%s%s", time.Now().Format("20060102"), uuid.New().String(), ext)
+	return fmt.Sprintf("%s_%s%s", time.Now().Format("20060102"), uuid.New().String()[:8], ext)
+}
+
+func GenerateStorageFileName(originalFileName string) string {
+	return generateFileName(originalFileName)
 }
 
 func getFileExtension(fileName string) string {

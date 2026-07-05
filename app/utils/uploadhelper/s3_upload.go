@@ -126,7 +126,16 @@ func (s *S3UploadService) UploadLocalFile(localFilePath string, objectKey string
 		return nil, fmt.Errorf("上传文件失败: %v", err)
 	}
 
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: info.Size(), FileType: s.GetFileExtension(key)}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         info.Size(),
+		FileType:     s.GetFileExtension(key),
+	}, nil
 }
 
 func (s *S3UploadService) DeleteFile(fileRef string) error {
@@ -203,7 +212,15 @@ func (s *S3UploadService) uploadMultipart(file *multipart.FileHeader, key string
 		return nil, fmt.Errorf("上传文件失败: %v", err)
 	}
 
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: file.Size, FileType: s.GetFileExtension(file.Filename)}, nil
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     file.Filename,
+		OriginalName: file.Filename,
+		StoredName:   filepath.Base(key),
+		Size:         file.Size,
+		FileType:     s.GetFileExtension(file.Filename),
+	}, nil
 }
 
 func (s *S3UploadService) getFileKey(fileRef string) string {
@@ -249,7 +266,16 @@ func (s *S3UploadService) DownloadAndSaveRemoteImage(imageURL string) (*app.Uplo
 		return nil, fmt.Errorf("上传图片失败: %v", err)
 	}
 
-	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: resp.ContentLength, FileType: ext}, nil
+	storedName := filepath.Base(key)
+	return &app.UploadResponse{
+		Url:          s.GetFileUrl(key),
+		Path:         key,
+		FileName:     storedName,
+		OriginalName: storedName,
+		StoredName:   storedName,
+		Size:         resp.ContentLength,
+		FileType:     ext,
+	}, nil
 }
 
 func mimeTypeByExt(ext string) string {

@@ -104,6 +104,37 @@ func (s *SysNoticeService) List(c context.Context, req *models.SysNoticeListRequ
 	return list, total, nil
 }
 
+func (s *SysNoticeService) ListUsers(c context.Context, req *models.SysNoticeUserListRequest) ([]models.SysNoticeSelectableUserItem, int64, error) {
+	var total int64
+	countQuery := app.DB().WithContext(c).
+		Table("sys_users u").
+		Where("u.deleted_at IS NULL").
+		Scopes(req.Handler())
+
+	if err := countQuery.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	list := make([]models.SysNoticeSelectableUserItem, 0)
+	listQuery := app.DB().WithContext(c).
+		Table("sys_users u").
+		Select("u.id, u.username AS user_name, u.nick_name, u.phone, u.status, COALESCE(d.name, '') AS department_name").
+		Joins("LEFT JOIN sys_department d ON d.id = u.dept_id").
+		Where("u.deleted_at IS NULL").
+		Scopes(req.Handler()).
+		Order("u.id DESC")
+
+	if req.PageNum > 0 && req.PageSize > 0 {
+		listQuery = listQuery.Offset((req.PageNum - 1) * req.PageSize).Limit(req.PageSize)
+	}
+
+	if err := listQuery.Scan(&list).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return list, total, nil
+}
+
 func (s *SysNoticeService) GetByID(c context.Context, id uint) (*models.SysNoticeListItem, error) {
 	item := &models.SysNoticeListItem{}
 	err := app.DB().WithContext(c).

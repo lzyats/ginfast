@@ -26,6 +26,7 @@ export type AffixListResult = BaseResult<{
 export type UploadResult = BaseResult<{
     id: number;
     name: string;
+    storedName?: string;
     path: string;
     size: number;
     ftype: string;

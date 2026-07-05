@@ -100,6 +100,7 @@ func InitRoutes(engine *gin.Engine) {
 			adminNotice.Use(middleware.AdminOnlyMiddleware())
 			{
 				adminNotice.GET("/list", sysNoticeControllers.List)
+				adminNotice.GET("/users", sysNoticeControllers.ListUsers)
 				adminNotice.GET("/:id", sysNoticeControllers.GetByID)
 				adminNotice.POST("/send", sysNoticeControllers.Send)
 			}

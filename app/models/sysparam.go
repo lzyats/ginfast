@@ -7,14 +7,23 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	SysParamTypeText   = "text"
+	SysParamTypeNumber = "number"
+	SysParamTypeSelect = "select"
+	SysParamTypeUpload = "upload"
+)
+
 type SysParam struct {
 	BaseModel
-	Name        *string `gorm:"column:name;size:255;comment:参数名称" json:"name"`
-	Code        *string `gorm:"column:code;size:255;uniqueIndex;comment:参数唯一标识" json:"code"`
-	Value       *string `gorm:"column:value;type:text;comment:参数值" json:"value"`
-	Status      *int8   `gorm:"column:status;comment:状态" json:"status"`
-	Description *string `gorm:"column:description;size:500;comment:描述" json:"description"`
-	CreatedBy   *uint   `gorm:"column:created_by;comment:创建人" json:"createdBy"`
+	Name        *string `gorm:"column:name;size:255;comment:鍙傛暟鍚嶇О" json:"name"`
+	Code        *string `gorm:"column:code;size:255;uniqueIndex;comment:鍙傛暟鍞竴鏍囪瘑" json:"code"`
+	Value       *string `gorm:"column:value;type:text;comment:鍙傛暟鍊? json:"value"`
+	ParamType   *string `gorm:"column:param_type;size:20;default:text;comment:鍙傛暟绫诲瀷(text/number/select/upload)" json:"paramType"`
+	Options     *string `gorm:"column:options;type:text;comment:涓嬫媺閫夐」JSON" json:"options"`
+	Status      *int8   `gorm:"column:status;comment:鐘舵€?0绂佺敤/1鍚敤)" json:"status"`
+	Description *string `gorm:"column:description;size:500;comment:鎻忚堪" json:"description"`
+	CreatedBy   *uint   `gorm:"column:created_by;comment:鍒涘缓浜? json:"createdBy"`
 }
 
 func (SysParam) TableName() string {

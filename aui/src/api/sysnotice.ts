@@ -17,6 +17,15 @@ export interface NoticeItem {
   createdByName?: string;
 }
 
+export interface NoticeSelectableUserItem {
+  id: number;
+  userName: string;
+  nickName: string;
+  phone: string;
+  status: number;
+  departmentName: string;
+}
+
 export type NoticeListResult = BaseResult<{
   list: NoticeItem[];
   total: number;
@@ -26,12 +35,21 @@ export type NoticeUnreadCountResult = BaseResult<{
   unreadCount: number;
 }>;
 
+export type NoticeUserListResult = BaseResult<{
+  list: NoticeSelectableUserItem[];
+  total: number;
+}>;
+
 export const getSysNoticeListAPI = (params?: any) => {
   return http.request<NoticeListResult>("get", baseUrlApi("sysNotice/list"), { params });
 };
 
 export const getMyNoticeListAPI = (params?: any) => {
   return http.request<NoticeListResult>("get", baseUrlApi("sysNotice/my/list"), { params });
+};
+
+export const getSysNoticeUsersAPI = (params?: any) => {
+  return http.request<NoticeUserListResult>("get", baseUrlApi("sysNotice/users"), { params });
 };
 
 export const sendSysNoticeAPI = (data: { title: string; content: string; category: string; userIds?: number[] }) => {

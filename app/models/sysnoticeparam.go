@@ -42,6 +42,34 @@ func (r *SysNoticeListRequest) Handler() func(db *gorm.DB) *gorm.DB {
 	}
 }
 
+type SysNoticeUserListRequest struct {
+	BasePaging
+	Validator
+	Name   string `json:"name" form:"name"`
+	Phone  string `json:"phone" form:"phone"`
+	Status string `json:"status" form:"status"`
+}
+
+func (r *SysNoticeUserListRequest) Validate(c *gin.Context) error {
+	return r.Check(c, r)
+}
+
+func (r *SysNoticeUserListRequest) Handler() func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if strings.TrimSpace(r.Name) != "" {
+			keyword := "%" + strings.TrimSpace(r.Name) + "%"
+			db = db.Where("u.username LIKE ? OR u.nick_name LIKE ?", keyword, keyword)
+		}
+		if strings.TrimSpace(r.Phone) != "" {
+			db = db.Where("u.phone LIKE ?", "%"+strings.TrimSpace(r.Phone)+"%")
+		}
+		if strings.TrimSpace(r.Status) != "" {
+			db = db.Where("u.status = ?", strings.TrimSpace(r.Status))
+		}
+		return db
+	}
+}
+
 type SysMyNoticeListRequest struct {
 	BasePaging
 	Validator

@@ -67,7 +67,16 @@ func (ac *SysAffixController) Upload(c *gin.Context) {
 
 	// 创建文件记录
 	affix := models.NewSysAffix()
-	affix.Name = response.FileName
+	originalName := strings.TrimSpace(response.OriginalName)
+	if originalName == "" {
+		originalName = strings.TrimSpace(response.FileName)
+	}
+	storedName := strings.TrimSpace(response.StoredName)
+	if storedName == "" {
+		storedName = strings.TrimSpace(response.FileName)
+	}
+
+	affix.Name = originalName
 	affix.Path = response.Path
 	affix.Url = response.Url
 	affix.Size = int(response.Size)
@@ -82,7 +91,7 @@ func (ac *SysAffixController) Upload(c *gin.Context) {
 		req.Width > 0 && req.Height > 0 {
 
 		// 生成缩略图文件名
-		thumbnailName := imagehelper.GenerateThumbnailName(response.FileName, req.Width, req.Height)
+		thumbnailName := imagehelper.GenerateThumbnailName(storedName, req.Width, req.Height)
 
 		// 获取原图所在目录
 		originalDir := filepath.Dir(response.Path)
@@ -121,6 +130,7 @@ func (ac *SysAffixController) Upload(c *gin.Context) {
 		"id":    affix.ID,
 		"name":  affix.Name,
 		"path":  affix.Path,
+		"storedName": storedName,
 		"size":  affix.Size,
 		"ftype": affix.Ftype,
 		"url":   affix.Url,
