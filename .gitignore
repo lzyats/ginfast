@@ -46,6 +46,7 @@ resource/logs/*.log
 /resource/*
 !/resource/database/
 !/resource/public/
+!/resource/ip2region/
 /resource/public/*
 
 # 临时文件
