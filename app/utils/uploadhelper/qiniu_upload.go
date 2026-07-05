@@ -2,22 +2,19 @@ package uploadhelper
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"gin-fast/app/global/app"
+	"io"
 	"mime/multipart"
-	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
 )
 
-// QiniuUploadService 七牛云文件上传服务
 type QiniuUploadService struct {
 	config app.UploadConfig
 	mac    *qbox.Mac
@@ -26,223 +23,124 @@ type QiniuUploadService struct {
 	domain string
 }
 
-// NewQiniuUploadService 创建七牛云文件上传服务
 func NewQiniuUploadService() app.FileUploadService {
 	config := GetUploadConfig()
-
-	// 创建七牛云认证对象
 	mac := qbox.NewMac(config.QiniuConfig.AccessKey, config.QiniuConfig.SecretKey)
-
-	// 创建七牛云配置对象
-	cfg := &storage.Config{
-		// 空间对应的机房
-		Zone: getZone(config.QiniuConfig.Zone),
-		// 是否使用https域名
-		UseHTTPS: true,
-		// 上传是否使用CDN上传加速
-		UseCdnDomains: true,
-	}
-
-	return &QiniuUploadService{
-		config: config,
-		mac:    mac,
-		cfg:    cfg,
-		bucket: config.QiniuConfig.Bucket,
-		domain: config.QiniuConfig.Domain,
-	}
+	cfg := &storage.Config{Zone: getZone(config.QiniuConfig.Zone), UseHTTPS: true, UseCdnDomains: true}
+	return &QiniuUploadService{config: config, mac: mac, cfg: cfg, bucket: config.QiniuConfig.Bucket, domain: config.QiniuConfig.Domain}
 }
 
-// HandleUpload 处理文件上传（HTTP请求处理）
 func (s *QiniuUploadService) HandleUpload(c *gin.Context, fileName string) (*app.UploadResponse, error) {
-	// 获取上传的文件
 	file, err := c.FormFile(fileName)
 	if err != nil {
 		return nil, fmt.Errorf("获取文件失败: %v", err)
 	}
-
-	// 验证文件
 	if valid, err := s.ValidateFile(file); !valid {
 		return nil, err
 	}
-
-	// 上传文件
 	return s.UploadFile(file)
 }
 
-// UploadFile 上传文件
 func (s *QiniuUploadService) UploadFile(file *multipart.FileHeader) (*app.UploadResponse, error) {
-	// 生成文件名
 	fileName := s.GenerateFileName(file.Filename)
+	key := buildDatedObjectKey(s.config.QiniuConfig.BasePath, fileName)
+	return s.uploadMultipart(file, key)
+}
 
-	// 上传文件
-	key := fileName
-	url, err := s.uploadFile(file, key)
+func (s *QiniuUploadService) UploadFileWithCustomPath(file *multipart.FileHeader, customPath string) (string, error) {
+	fileName := s.GenerateFileName(file.Filename)
+	key := buildObjectKey(s.config.QiniuConfig.BasePath, customPath, fileName)
+	resp, err := s.uploadMultipart(file, key)
 	if err != nil {
+		return "", err
+	}
+	return resp.Url, nil
+}
+
+func (s *QiniuUploadService) UploadLocalFile(localFilePath string, objectKey string) (*app.UploadResponse, error) {
+	key := buildObjectKey(s.config.QiniuConfig.BasePath, objectKey)
+	src, err := os.Open(localFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("打开文件失败: %v", err)
+	}
+	defer src.Close()
+	info, err := src.Stat()
+	if err != nil {
+		return nil, fmt.Errorf("获取文件信息失败: %v", err)
+	}
+	if err := s.putObject(src, info.Size(), key); err != nil {
 		return nil, err
 	}
-	return &app.UploadResponse{
-		Url:      url,
-		FileName: fileName,
-		Path:     "",
-		Size:     file.Size,
-		FileType: s.GetFileExtension(file.Filename),
-	}, nil
+	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: info.Size(), FileType: s.GetFileExtension(key)}, nil
 }
 
-// UploadFileWithCustomPath 上传文件到指定路径
-func (s *QiniuUploadService) UploadFileWithCustomPath(file *multipart.FileHeader, customPath string) (string, error) {
-	// 生成文件名
-	fileName := s.GenerateFileName(file.Filename)
-
-	// 构建文件key
-	key := filepath.Join(customPath, fileName)
-
-	// 上传文件
-	return s.uploadFile(file, key)
-}
-
-// DeleteFile 删除文件
-func (s *QiniuUploadService) DeleteFile(fileUrl string) error {
-	// 从URL中提取文件key
-	key := s.getFileKeyFromUrl(fileUrl)
+func (s *QiniuUploadService) DeleteFile(fileRef string) error {
+	key := s.getFileKey(fileRef)
 	if key == "" {
-		return fmt.Errorf("无效的文件URL: %s", fileUrl)
+		return fmt.Errorf("无效的文件标识: %s", fileRef)
 	}
-
-	// 创建七牛云存储管理器
-	bucketManager := storage.NewBucketManager(s.mac, s.cfg)
-
-	// 删除文件
-	err := bucketManager.Delete(s.bucket, key)
-	if err != nil {
-		return fmt.Errorf("删除文件失败: %v", err)
-	}
-
-	return nil
+	return storage.NewBucketManager(s.mac, s.cfg).Delete(s.bucket, key)
 }
 
-// GetFileUrl 获取文件访问URL
 func (s *QiniuUploadService) GetFileUrl(fileName string) string {
-	// 构建公开访问URL
-	if s.domain != "" {
-		// 确保域名以http://或https://开头
-		if !strings.HasPrefix(s.domain, "http://") && !strings.HasPrefix(s.domain, "https://") {
-			s.domain = "https://" + s.domain
-		}
-
-		// 确保域名不以/结尾
-		s.domain = strings.TrimSuffix(s.domain, "/")
-
-		return fmt.Sprintf("%s/%s", s.domain, fileName)
+	domain := normalizeDomainURL(s.domain)
+	if domain == "" {
+		return ""
 	}
-
-	return ""
+	return fmt.Sprintf("%s/%s", domain, strings.TrimLeft(fileName, "/"))
 }
 
-// GetUploadConfig 获取上传配置
-func (s *QiniuUploadService) GetUploadConfig() app.UploadConfig {
-	return s.config
-}
-
-// GetFileExtension 获取文件扩展名
+func (s *QiniuUploadService) GetUploadConfig() app.UploadConfig { return s.config }
 func (s *QiniuUploadService) GetFileExtension(fileName string) string {
-	return strings.ToLower(filepath.Ext(fileName))
+	return getFileExtension(fileName)
 }
-
-// SaveFile 保存文件到本地
+func (s *QiniuUploadService) GenerateFileName(originalFileName string) string {
+	return generateFileName(originalFileName)
+}
 func (s *QiniuUploadService) SaveFile(file *multipart.FileHeader, filePath string) error {
-	// 七牛云上传服务不支持本地保存文件
-	return fmt.Errorf("七牛云上传服务不支持本地保存文件")
+	return errUnsupportedLocalSave("qiniu")
 }
 
-// ValidateFile 验证文件
 func (s *QiniuUploadService) ValidateFile(file *multipart.FileHeader) (bool, error) {
-	// 获取上传配置
-	config := s.GetUploadConfig()
-
-	// 验证文件大小
-	maxSize := int64(config.MaxSize * 1024 * 1024) // 转换为字节
-	if file.Size > maxSize {
-		return false, fmt.Errorf("文件大小超过限制，最大允许 %d MB", config.MaxSize)
+	if err := validateFileByConfig(file, s.config.MaxSize, s.config.AllowedTypes); err != nil {
+		return false, err
 	}
-
-	// 验证文件类型
-	fileExt := s.GetFileExtension(file.Filename)
-	if len(config.AllowedTypes) > 0 {
-		allowed := false
-		for _, allowedType := range config.AllowedTypes {
-			if strings.EqualFold(fileExt, allowedType) {
-				allowed = true
-				break
-			}
-		}
-		if !allowed {
-			return false, fmt.Errorf("文件类型不允许，允许的类型: %v", config.AllowedTypes)
-		}
-	}
-
 	return true, nil
 }
 
-// GenerateFileName 生成文件名
-func (s *QiniuUploadService) GenerateFileName(originalFileName string) string {
-	// 获取文件扩展名
-	ext := s.GetFileExtension(originalFileName)
-
-	// 生成UUID作为文件名
-	uuidName := uuid.New().String()
-
-	// 添加时间戳
-	timestamp := time.Now().Format("20060102")
-
-	return fmt.Sprintf("%s_%s%s", timestamp, uuidName, ext)
-}
-
-// uploadFile 上传文件到七牛云
-func (s *QiniuUploadService) uploadFile(file *multipart.FileHeader, key string) (string, error) {
-	// 创建表单上传的对象
-	formUploader := storage.NewFormUploader(s.cfg)
-	ret := storage.PutRet{}
-
-	// 可选配置
-	putExtra := storage.PutExtra{
-		// 设置文件上传后进行的处理
-		// MimeType: "application/octet-stream",
-	}
-
-	// 打开上传的文件
+func (s *QiniuUploadService) uploadMultipart(file *multipart.FileHeader, key string) (*app.UploadResponse, error) {
 	src, err := file.Open()
 	if err != nil {
-		return "", fmt.Errorf("打开文件失败: %v", err)
+		return nil, fmt.Errorf("打开文件失败: %v", err)
 	}
 	defer src.Close()
-
-	// 上传文件
-	putPolicy := storage.PutPolicy{
-		Scope: s.bucket,
+	if err := s.putObject(src, file.Size, key); err != nil {
+		return nil, err
 	}
+	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: file.Size, FileType: s.GetFileExtension(file.Filename)}, nil
+}
+
+func (s *QiniuUploadService) putObject(reader io.Reader, size int64, key string) error {
+	formUploader := storage.NewFormUploader(s.cfg)
+	putExtra := storage.PutExtra{}
+	putPolicy := storage.PutPolicy{Scope: s.bucket}
 	upToken := putPolicy.UploadToken(s.mac)
-	err = formUploader.Put(context.Background(), &ret, upToken, key, src, int64(file.Size), &putExtra)
-	if err != nil {
-		return "", fmt.Errorf("上传文件失败: %v", err)
+	ret := storage.PutRet{}
+	if err := formUploader.Put(context.Background(), &ret, upToken, key, reader, size, &putExtra); err != nil {
+		return fmt.Errorf("上传文件失败: %v", err)
 	}
-
-	// 返回文件URL
-	return s.GetFileUrl(key), nil
+	return nil
 }
 
-// getFileKeyFromUrl 从URL中提取文件key
-func (s *QiniuUploadService) getFileKeyFromUrl(fileUrl string) string {
-	// 从URL中提取文件key部分
-	key := strings.TrimPrefix(fileUrl, s.domain)
-	key = strings.TrimPrefix(key, "http://")
-	key = strings.TrimPrefix(key, "https://")
-	key = strings.TrimPrefix(key, "/")
-
-	return key
+func (s *QiniuUploadService) getFileKey(fileRef string) string {
+	domain := normalizeDomainURL(s.domain)
+	key := strings.TrimSpace(fileRef)
+	if strings.HasPrefix(key, "http://") || strings.HasPrefix(key, "https://") {
+		key = strings.TrimPrefix(key, domain)
+	}
+	return strings.TrimLeft(key, "/")
 }
 
-// getZone 根据区域名称获取七牛云区域对象
 func getZone(zoneName string) *storage.Zone {
 	switch zoneName {
 	case "ZoneHuadong":
@@ -256,79 +154,20 @@ func getZone(zoneName string) *storage.Zone {
 	case "ZoneXinjiapo":
 		return &storage.ZoneXinjiapo
 	default:
-		// 默认使用华东区域
 		return &storage.ZoneHuadong
 	}
 }
 
-// DownloadAndSaveRemoteImage 下载并保存远程图片到七牛云
-func (s *QiniuUploadService) DownloadAndSaveRemoteImage(imageUrl string) (*app.UploadResponse, error) {
-	// 创建HTTP客户端，设置超时和跳过SSL验证（某些情况下需要）
-	client := &http.Client{
-		Timeout: 30 * time.Second,
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
-	}
-
-	// 发送HTTP请求下载图片
-	resp, err := client.Get(imageUrl)
+func (s *QiniuUploadService) DownloadAndSaveRemoteImage(imageURL string) (*app.UploadResponse, error) {
+	resp, ext, err := downloadRemoteImage(imageURL)
 	if err != nil {
-		return nil, fmt.Errorf("下载图片失败: %v", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
-
-	// 检查响应状态码
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("下载图片失败，状态码: %d", resp.StatusCode)
-	}
-
-	// 检查Content-Type是否为图片
-	contentType := resp.Header.Get("Content-Type")
-	if !strings.HasPrefix(contentType, "image/") {
-		return nil, fmt.Errorf("下载的文件不是图片类型: %s", contentType)
-	}
-
-	// 从Content-Type中获取文件扩展名
-	ext := ".jpg" // 默认扩展名
-	if strings.Contains(contentType, "png") {
-		ext = ".png"
-	} else if strings.Contains(contentType, "gif") {
-		ext = ".gif"
-	} else if strings.Contains(contentType, "webp") {
-		ext = ".webp"
-	} else if strings.Contains(contentType, "jpeg") {
-		ext = ".jpg"
-	}
-
-	// 生成文件名
 	fileName := s.GenerateFileName("image" + ext)
-
-	// 创建表单上传的对象
-	formUploader := storage.NewFormUploader(s.cfg)
-	ret := storage.PutRet{}
-
-	// 可选配置
-	putExtra := storage.PutExtra{}
-
-	// 上传文件
-	putPolicy := storage.PutPolicy{
-		Scope: s.bucket,
+	key := buildDatedObjectKey(s.config.QiniuConfig.BasePath, fileName)
+	if err := s.putObject(resp.Body, resp.ContentLength, key); err != nil {
+		return nil, err
 	}
-	upToken := putPolicy.UploadToken(s.mac)
-	err = formUploader.Put(context.Background(), &ret, upToken, fileName, resp.Body, resp.ContentLength, &putExtra)
-	if err != nil {
-		return nil, fmt.Errorf("上传图片到七牛云失败: %v", err)
-	}
-
-	// 构建响应
-	response := &app.UploadResponse{
-		Url:      s.GetFileUrl(fileName),
-		FileName: fileName,
-		Size:     resp.ContentLength,
-		FileType: ext,
-		Path:     fileName,
-	}
-
-	return response, nil
+	return &app.UploadResponse{Url: s.GetFileUrl(key), Path: key, FileName: filepath.Base(key), Size: resp.ContentLength, FileType: ext}, nil
 }

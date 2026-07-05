@@ -41,6 +41,7 @@ func init() {
 	app.ZapLog = createZapFactory(service.ZapLogHandler)
 	// 初始化数据库
 	initDB()
+	initSystemTables()
 
 	// 初始化casbin
 	app.CasbinV2 = casbinhelper.NewCasbinHelper()
@@ -96,6 +97,12 @@ func initDB() {
 		} else {
 			app.GormDbPostgreSql = dbPostgresql
 		}
+	}
+}
+
+func initSystemTables() {
+	if err := service.NewSysNoticeService().AutoMigrate(); err != nil {
+		log.Fatal("初始化通知数据表失败: " + err.Error())
 	}
 }
 
